@@ -2,17 +2,130 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Creating a game in Phaser, part 1</title>
+    <title>Символьное вычисление производной</title>
     <script src="tree.js"></script>
 </head>
 <body>
 
-<h2>RPN</h2>
-<p id="in">3 * ( x + 1 ) - 8 / x</p>
-<p id="out">Nothing</p>
+<h1>Символьное вычисление производной</h1>
 
+<h2>Поддерживаемые символы <button id="supportedSymbolsButton" onclick="showSupportedSymbols()">Показать</button></h2>
+<table id="supportedSymbols"  style="display: none">
+    <tr>
+        <th>Обозначение</th>
+        <th>Описание</th>
+    </tr>
+    <tr>
+        <td>.</td>
+        <td>Десятичный разделитель</td>
+    </tr>
+    <tr>
+        <td>,</td>
+        <td>Разделитель аргументов функции</td>
+    </tr>
+    <tr>
+        <td>+</td>
+        <td>Сложение</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>Вычитание</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>Унарный минус</td>
+    </tr>
+    <tr>
+        <td>*</td>
+        <td>Умножение</td>
+    </tr>
+    <tr>
+        <td>/</td>
+        <td>Деление</td>
+    </tr>
+    <tr>
+        <td>^</td>
+        <td>Возведение в степень</td>
+    </tr>
+    <tr>
+        <td>e</td>
+        <td>Константа, основание натурального логарифма</td>
+    </tr>
+    <tr>
+        <td>(</td>
+        <td>Открывающая скобка</td>
+    </tr>
+    <tr>
+        <td>)</td>
+        <td>Закрывающая скобка</td>
+    </tr>
+    <tr>
+        <td>sqrt</td>
+        <td>Извлечение квадратного корня: sqrt(x)</td>
+    </tr>
+    <tr>
+        <td>rt</td>
+        <td>Извлечение квадратного корня заданной степени: rt(n, x)</td>
+    </tr>
+    <tr>
+        <td>sin</td>
+        <td>Синус: sin(x)</td>
+    </tr>
+    <tr>
+        <td>cos</td>
+        <td>Косинус: cos(x)</td>
+    </tr>
+    <tr>
+        <td>tg</td>
+        <td>Тангенс: tg(x)</td>
+    </tr>
+    <tr>
+        <td>ctg</td>
+        <td>Котангенс: ctg(x)</td>
+    </tr>
+    <tr>
+        <td>ln</td>
+        <td>Натуральный логарифм: ln(x)</td>
+    </tr>
+    <tr>
+        <td>log</td>
+        <td>Логарифм по заданномy основанию: log(n, x)</td>
+    </tr>
 
+</table>
 
+<h2>Примеры:</h2>
+<ul>
+    <li>
+        <button onclick="loadExample('example1')">Вставить</button>
+        f(x) = <span id="example1">log( a, x + 1 ) * e^(x+6.12)</span>
+    </li>
+    <li>
+        <button onclick="loadExample('example2')">Вставить</button>
+        f(x) = <span id="example2">-3.14 * ln( x + 1 ) - rt( 5, -x * 3 ) / log(3, x + 2) + (-3.14 * ( x + 1 ) - 8 / (-x))/(x^(2+k)+x) + 8.62</span>
+    </li>
+    <li>
+        <button onclick="loadExample('example3')">Вставить</button>
+        f(x) = <span id="example3">x/-x^(6+x)</span>
+    </li>
+</ul>
+
+<div>
+    f(x) = <input type="text" id="function">
+    <button onclick="showCalculate()">Вычислить df(x)/dx</button><button onclick="showBuildTree()">Построить дерево</button>
+</div>
+
+<div id="errorDiv" style="display: none">
+    <h2>Что-то пошло не так:</h2>
+    <p id="errorText"></p>
+</div>
+
+<div id="treeDiv" style="display: none">
+    <h2>Дерево синтaксического разбора <button id="hideTreeButton" onclick="hideTree()">Убрать</button></h2>
+    <canvas id="treeCanvas">
+        Your browser does not support the canvas element.
+    </canvas>
+</div>
 
 </body>
 </html>
