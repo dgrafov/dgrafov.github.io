@@ -15,7 +15,14 @@ function showCalculate() {
 
     if(input.length > 0) {
         console.log("calculate: " + input);
-        //Do smth
+        var ret = buildTree(input);
+        if(ret[0] === true) {
+            var derivativeTree = derivative(ret[1]);
+            drawTree(derivativeTree);
+        }
+        else {
+            displayError(ret[1]);
+        }
     }
     else {
         displayError(noFunctionError);
@@ -190,6 +197,74 @@ function buildTree(input) {
     }
 
     return [false, error];
+}
+
+function derivative(node) {
+    if(node === null) {
+        return null;
+    }
+    var left = null;
+    var right = null;
+    console.log("Token " + node.token);
+    if(node.left !== null) {
+        left = derivative(node.left);
+    }
+    if(node.right !== null) {
+        right = derivative(node.right);
+    }
+
+    switch(node.token) {
+    case "+":
+        return connectNodes(new Node("+"), left, right);
+    break;
+    case "-":
+        return connectNodes(new Node("-"), left, right);
+    break;
+    case "*":
+        return connectNodes(new Node("+"),
+            connectNodes(new Node("*"), left, copyTree(node.right)), // u'*v
+            connectNodes(new Node("*"), copyTree(node.left), right)); // u*v'
+    break;
+    case "/":
+        return connectNodes(new Node("/"),
+            connectNodes(new Node("-"),
+                connectNodes(new Node("*"), left, copyTree(node.right)), // u'*v
+                connectNodes(new Node("*"), copyTree(node.left), right)), // u*v'
+            connectNodes(new Node("^"),
+                copyTree(node.right),   // v
+                new Node("2"))); // v
+    break;
+    case "x":
+        return new Node("1");
+    break;
+    default:
+        //constant
+        return new Node("0");
+
+    }
+    console.log("Error in derivativeTree, last node: " + printTree(node));
+    return null;
+}
+
+function copyTree(root) {
+    if(root === null) {
+        return null;
+    }
+    return connectNodes(new Node(root.token), copyTree(root.left), copyTree(root.right));
+}
+
+function connectNodes(parent, left, right) {
+    parent.left = left;
+    parent.right = right;
+
+    if(left !== null) {
+        left.parent = parent;
+    }
+
+    if(right !== null) {
+        right.parent = parent;
+    }
+    return parent;
 }
 
 function isLetter(c) {
