@@ -4,6 +4,8 @@ var unknownSymbol = "Неизвестный символ: "
 var noClosingBracket = "Не хватает закрывающей скобки"
 var noOpeningBracket = "Не хватает открывающей скобки"
 
+//simplification do arithmetic with 2 constants, 1, 0
+
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
 }
@@ -221,11 +223,29 @@ function derivative(node) {
         return connectNodes(new Node("-"), left, right);
     break;
     case "*":
+        // left was constant
+        if(left.token === "0") {
+            return connectNodes(new Node("*"), copyTree(node.left), right); //(k*f(x))' = k*f'(x)
+        }
+        // right was constant
+        if(right.token === "0") {
+            return connectNodes(new Node("*"), left, copyTree(node.right)); //(f(x)*k)' = f'(x)*k
+        }
+        //both constants are impossible due to initial simplification of the input
+
+        //general case
         return connectNodes(new Node("+"),
             connectNodes(new Node("*"), left, copyTree(node.right)), // u'*v
             connectNodes(new Node("*"), copyTree(node.left), right)); // u*v'
     break;
     case "/":
+        // right was constant
+        if(right.token === "0") {
+            return connectNodes(new Node("/"), left, copyTree(node.right)); //(f(x)/k)' = f'(x)/k
+        }
+        //both constants are impossible due to initial simplification of the input
+
+        //general case
         return connectNodes(new Node("/"),
             connectNodes(new Node("-"),
                 connectNodes(new Node("*"), left, copyTree(node.right)), // u'*v
