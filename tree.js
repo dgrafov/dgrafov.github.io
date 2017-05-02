@@ -4,7 +4,21 @@ var unknownSymbol = "Неизвестный символ: "
 var noClosingBracket = "Не хватает закрывающей скобки"
 var noOpeningBracket = "Не хватает открывающей скобки"
 
-//simplification do arithmetic with 2 constants, 1, 0
+//simplification
+// a+-*b,
+// a/b ????
+// 0+x, x+0
+// 0-x, x-0
+// -1 * x ????
+// 1*x
+// 0*x
+// 0^x
+// x^0
+// 1^x
+// x^1
+// ln1, log1
+// f(x) / f(x)
+// u(x)/(f(x)/g(x))
 
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
@@ -254,8 +268,61 @@ function derivative(node) {
                 copyTree(node.right),   // v
                 new Node("2"))); // v
     break;
+    case "^":
+        // left was constant, it's a^f(x) case: return a^f(x) * ln(a) * f'(x)
+        if(left.token === "0") {
+            //check for e.
+            if(node.left.token === "e") {
+                return connectNodes(new Node("*"), copyTree(node), right); // e^f(x) * f'(x)
+            }
+            //just constant
+            return connectNodes(new Node("*"),
+                connectNodes(new Node("*"), copyTree(node), right), //a^f(x) * f'(x)
+                connectNodes(new Node("ln"), copyTree(node.left), null)); // ln(a)
+        }
+        // right was constant, it's f(x)^a case: return a*f(x)^(a-1)*f'(x)
+        if(right.token === "0") {
+            return connectNodes(new Node("*"),
+                connectNodes(new Node("*"), copyTree(node.right), // a*
+                    connectNodes(new Node("^"), copyTree(node.left), // f(x)^
+                        connectNodes(new Node("-"), copyTree(node.right), new Node("1")))), // (a-1)
+                left); // f'(x)
+        }
+
+        // general case: f(x)^u(x). After trick with e^(u(x)*ln(f(x)) we'll have:
+        // TODO better would be to do f(x)^u(x) * derivative (f(x) * ln(f(x)))
+        // f(x)^u(x) * (u'(x) * ln(f(x)) + (u(x)/f(x))*f'(x))
+        return connectNodes(new Node("*"),
+            copyTree(node),//f(x)^u(x)
+            connectNodes(new Node("+"),
+                connectNodes(new Node("*"), right, //u'(x)*
+                    connectNodes(new Node("ln"), copyTree(node.left), null)), //ln(f(x))
+                connectNodes(new Node("*"),
+                    connectNodes(new Node("/"), copyTree(node.right), copyTree(node.left)), //u(x)/f(x)
+                    left)));//f'(x)
+    break;
     case "x":
         return new Node("1");
+    case "log":
+        //log(5, f(x))
+        //Переход к новому основанию
+        //log(f(x), 5)
+        //log(f(x), u(x))
+    break;
+    case "ln":
+
+    break;
+    case "sin":
+
+    break;
+    case "cos":
+
+    break;
+    case "tg":
+
+    break;
+    case "ctg":
+
     break;
     default:
         //constant
