@@ -18,7 +18,10 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 // x^1
 // ln1, log1
 // f(x) / f(x)
+// f(x) / -f(x)
+// f(x) / f(x)*k ????
 // u(x)/(f(x)/g(x))
+// (-x)^2k
 
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
