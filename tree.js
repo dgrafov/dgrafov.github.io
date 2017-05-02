@@ -290,26 +290,31 @@ function derivative(node) {
         }
 
         // general case: f(x)^u(x). After trick with e^(u(x)*ln(f(x)) we'll have:
-        // TODO better would be to do f(x)^u(x) * derivative (f(x) * ln(f(x)))
-        // f(x)^u(x) * (u'(x) * ln(f(x)) + (u(x)/f(x))*f'(x))
+        // f(x)^u(x) * (u(x)*ln(f(x)))'
         return connectNodes(new Node("*"),
             copyTree(node),//f(x)^u(x)
-            connectNodes(new Node("+"),
-                connectNodes(new Node("*"), right, //u'(x)*
-                    connectNodes(new Node("ln"), copyTree(node.left), null)), //ln(f(x))
+            derivative(
                 connectNodes(new Node("*"),
-                    connectNodes(new Node("/"), copyTree(node.right), copyTree(node.left)), //u(x)/f(x)
-                    left)));//f'(x)
+                    copyTree(node.right),
+                    connectNodes(new Node("ln"), copyTree(node.left), null)))) //(u(x) * ln(f(x)))'
     break;
     case "x":
         return new Node("1");
     case "log":
         //log(5, f(x))
         //Переход к новому основанию
-        //log(f(x), 5)
-        //log(f(x), u(x))
+        //log(f(x), 5) - к 5
+        //log(f(x), u(x)) - к e
     break;
     case "ln":
+        return connectNodes(new Node("*"),
+            connectNodes(new Node("/"), new Node("1"), copyTree(node.left)), // 1/f(x)
+            left); //f'(x)
+    break;
+    case "sqrt":
+
+    break;
+    case "rt":
 
     break;
     case "sin":
