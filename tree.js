@@ -22,8 +22,10 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 // f(x) / f(x)*k ????
 // u(x)/(f(x)/g(x))
 // (-x)^2k
+// (x^a)^b
 
 //improvements: parse 2x, 2tg etc
+//cache trees until input changes
 
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
@@ -321,7 +323,15 @@ function derivative(node) {
                 connectNodes(new Node("sqrt"), copyTree(node.left), null)));
     break;
     case "rt":
-        //TODO
+        return connectNodes(new Node("/"),
+            right, // f'(x)
+            connectNodes(new Node("*"),
+                copyTree(node.left),
+                connectNodes(new Node("rt"),
+                    copyTree(node.left),
+                    connectNodes(new Node("^"),
+                        copyTree(node.right), // f(x)
+                        connectNodes(new Node("-"), copyTree(node.left), new Node("1"))))));
     break;
     case "sin":
         return connectNodes(new Node("*"),
