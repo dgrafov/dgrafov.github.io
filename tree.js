@@ -301,9 +301,8 @@ function derivative(node) {
                     copyTree(node.right),
                     connectNodes(new Node("ln"), copyTree(node.left), null)))) //(u(x) * ln(f(x)))'
     break;
-    case "x":
-        return new Node("1");
     case "log":
+        //TODO
         //log(5, f(x))
         //Переход к новому основанию
         //log(f(x), 5) - к 5
@@ -315,23 +314,45 @@ function derivative(node) {
             left); //f'(x)
     break;
     case "sqrt":
-
+        //TODO
     break;
     case "rt":
-
+        //TODO
     break;
     case "sin":
-
+        return connectNodes(new Node("*"),
+            connectNodes(new Node("cos"), copyTree(node.left), null), // cos(f(x))
+            left); //f'(x)
     break;
     case "cos":
-
+        return connectNodes(new Node("-"),
+            connectNodes(new Node("*"),
+                connectNodes(new Node("sin"), copyTree(node.left), null), // sin(f(x))
+                left), //f'(x)
+            null);
     break;
     case "tg":
-
+        return connectNodes(new Node("*"),
+            connectNodes(new Node("/"),
+                new Node("1"),
+                connectNodes(new Node("^"),
+                    connectNodes(new Node("cos"), copyTree(node.left), null), // cos(f(x))
+                    new Node("2"))),
+            left); //f'(x)
     break;
     case "ctg":
-
+        return connectNodes(new Node("-"),
+            connectNodes(new Node("*"),
+                connectNodes(new Node("/"),
+                    new Node("1"),
+                    connectNodes(new Node("^"),
+                        connectNodes(new Node("sin"), copyTree(node.left), null), // cos(f(x))
+                        new Node("2"))),
+                left),
+            null);
     break;
+    case "x":
+        return new Node("1");
     default:
         //constant
         return new Node("0");
