@@ -23,6 +23,8 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 // u(x)/(f(x)/g(x))
 // (-x)^2k
 
+//improvements: parse 2x, 2tg etc
+
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
 }
@@ -309,12 +311,14 @@ function derivative(node) {
         //log(f(x), u(x)) - к e
     break;
     case "ln":
-        return connectNodes(new Node("*"),
-            connectNodes(new Node("/"), new Node("1"), copyTree(node.left)), // 1/f(x)
-            left); //f'(x)
+        return connectNodes(new Node("/"), left, copyTree(node.left)); // f'(x)/f(x)
     break;
     case "sqrt":
-        //TODO
+        return connectNodes(new Node("/"),
+            left, // f'(x)
+            connectNodes(new Node("*"),
+                new Node("2"),
+                connectNodes(new Node("sqrt"), copyTree(node.left), null)));
     break;
     case "rt":
         //TODO
@@ -332,23 +336,19 @@ function derivative(node) {
             null);
     break;
     case "tg":
-        return connectNodes(new Node("*"),
-            connectNodes(new Node("/"),
-                new Node("1"),
+        return connectNodes(new Node("/"),
+                left, //f'(x)
                 connectNodes(new Node("^"),
                     connectNodes(new Node("cos"), copyTree(node.left), null), // cos(f(x))
-                    new Node("2"))),
-            left); //f'(x)
+                    new Node("2")));
     break;
     case "ctg":
         return connectNodes(new Node("-"),
-            connectNodes(new Node("*"),
-                connectNodes(new Node("/"),
-                    new Node("1"),
-                    connectNodes(new Node("^"),
-                        connectNodes(new Node("sin"), copyTree(node.left), null), // cos(f(x))
-                        new Node("2"))),
-                left),
+            connectNodes(new Node("/"),
+                left,
+                connectNodes(new Node("^"),
+                    connectNodes(new Node("sin"), copyTree(node.left), null), // sin(f(x))
+                    new Node("2"))),
             null);
     break;
     case "x":
