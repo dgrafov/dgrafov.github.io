@@ -4,6 +4,9 @@ var unknownSymbol = "Неизвестный символ: "
 var noClosingBracket = "Не хватает закрывающей скобки"
 var noOpeningBracket = "Не хватает открывающей скобки"
 
+//think of types of operands in the tree. Then we can simplify trees like log(a, b) to one node
+//without calculating a logarithm value. add token type to the node
+
 //simplification
 // a+-*b,
 // a/b ????
@@ -23,9 +26,14 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 // u(x)/(f(x)/g(x))
 // (-x)^2k
 // (x^a)^b
+// log(f(x), f(x))
 
 //improvements: parse 2x, 2tg etc
 //cache trees until input changes
+
+
+
+//add arc- functions
 
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
@@ -306,11 +314,27 @@ function derivative(node) {
                     connectNodes(new Node("ln"), copyTree(node.left), null)))) //(u(x) * ln(f(x)))'
     break;
     case "log":
-        //TODO
-        //log(5, f(x))
-        //Переход к новому основанию
-        //log(f(x), 5) - к 5
-        //log(f(x), u(x)) - к e
+        // left was constant: log(a, f(x)) case:
+        if(left.token === "0") {
+            if(right.token === "0") {
+                //log(a, b) - is a constant -> 0
+                return left;
+            }
+
+            // f'(x)/(f(x)*ln(a))
+            return connectNodes(new Node("/"),
+                right, // f'(x)
+                connectNodes(new Node("*"),
+                    copyTree(node.right), //f(x)
+                    connectNodes(new Node("ln"), copyTree(node.left), null))); // ln(a)
+        }
+
+        //log(f(x), g(x)) case. Transition to new log base: e
+        //log(f(x), g(x)) = ln(g(x))/ln(f(x))
+        return derivative(
+            connectNodes(new Node("/"),
+                connectNodes(new Node("ln"), copyTree(node.right), null), //ln(g(x))
+                connectNodes(new Node("ln"), copyTree(node.left), null))); //ln(f(x))
     break;
     case "ln":
         return connectNodes(new Node("/"), left, copyTree(node.left)); // f'(x)/f(x)
