@@ -4,37 +4,20 @@ var unknownSymbol = "Неизвестный символ: "
 var noClosingBracket = "Не хватает закрывающей скобки"
 var noOpeningBracket = "Не хватает открывающей скобки"
 
-//think of types of operands in the tree. Then we can simplify trees like log(a, b) to one node
-//without calculating a logarithm value. add token type to the node
-
 //simplification
-// a+-*b,
-// a/b ????
-// 0+x, x+0
-// 0-x, x-0
-// -1 * x ????
-// 1*x
-// 0*x
-// 0^x
-// x^0
-// 1^x
-// x^1
-// ln1, log1
-// f(x) / f(x)
+
+// -1 * x
 // f(x) / -f(x)
 // f(x) / f(x)*k ????
 // u(x)/(f(x)/g(x))
 // (-x)^2k
-// (x^a)^b
+
 // log(f(x), f(x))
-// (x^2)' - don't do x^(2-1) but rather x - simplification
-// x*x = x ^ 2
+
 // (x^a)^b = x ^ (a+b)
 
 //improvements: parse 2x, 2tg (x+b)(x+c) etc
 //cache trees until input changes
-
-
 
 //add arc- functions
 
@@ -51,7 +34,9 @@ function showCalculate() {
         console.log("calculate: " + input);
         var ret = buildTree(input);
         if(ret[0] === true) {
-            var derivativeTree = derivative(ret[1]);
+
+            var derivativeTree = simplify(ret[1]);
+            //var derivativeTree = derivative(ret[1]);
             drawTree(derivativeTree);
         }
         else {
@@ -113,7 +98,7 @@ function buildTree(input) {
     var i = 0;
     while(i < input.length && error === "") {
         if(isOperator(input[i])) {
-            if((i == 0 || input[i - 1] === '(' || isOperator(input[i - 1]))
+            if((i == 0 || input[i - 1] === '(' || input[i - 1] === "," || isOperator(input[i - 1]))
                 && input[i] === '-') {
                 // unary minus
                 var op = new Operator(input[i], true, false);
@@ -248,6 +233,14 @@ function additionDerivative(node, left, right) {
 }
 
 function substractionDerivative(node, left, right) {
+    //unary
+    if(node.right === null) {
+        if (left.token === "0") {
+            return new Node("0");
+        }
+        return connectNodes(new Node("-"), left, null);
+    }
+    //binary
     //check for constant
     if (left.token === "0" && right.token === "0") {
         return new Node("0");
@@ -412,6 +405,406 @@ function rtDerivative(node, left, right) {
                 copyTree(node.left))));
 }
 
+function sinDerivative(node, left, right) {
+    //check for constant
+    if(left.token === "0") {
+        return new Node("0");
+    }
+    return connectNodes(new Node("*"),
+        connectNodes(new Node("cos"), copyTree(node.left), null), // cos(f(x))
+        left); //f'(x)
+}
+
+function cosDerivative(node, left, right) {
+    //check for constant
+    if(left.token === "0") {
+        return new Node("0");
+    }
+    return connectNodes(new Node("-"),
+        connectNodes(new Node("*"),
+            connectNodes(new Node("sin"), copyTree(node.left), null), // sin(f(x))
+            left), //f'(x)
+        null);
+}
+
+function tgDerivative(node, left, right) {
+    //check for constant
+    if(left.token === "0") {
+        return new Node("0");
+    }
+    return connectNodes(new Node("/"),
+            left, //f'(x)
+            connectNodes(new Node("^"),
+                connectNodes(new Node("cos"), copyTree(node.left), null), // cos(f(x))
+                new Node("2")));
+}
+
+function ctgDerivative(node, left, right) {
+    //check for constant
+    if(left.token === "0") {
+        return new Node("0");
+    }
+    return connectNodes(new Node("-"),
+        connectNodes(new Node("/"),
+            left,
+            connectNodes(new Node("^"),
+                connectNodes(new Node("sin"), copyTree(node.left), null), // sin(f(x))
+                new Node("2"))),
+        null);
+}
+
+function toNumber(node) {
+    if(node.left === null && node.right === null) {
+        return parseFloat(node.token);
+    }
+    return NaN;
+}
+
+function calculate(node, leftNum, rightNum) {
+    var newNode = null;
+    switch(node.token) {
+        case "+":
+            newNode = new Node((leftNum + rightNum).toString());
+        break;
+        case "-":
+            newNode = new Node((leftNum - rightNum).toString());
+        break;
+        case "*":
+            newNode = new Node((leftNum * rightNum).toString());
+        break;
+        case "/":
+            if(leftNum % rightNum === 0 && rightNum !== 0) {
+                newNode = new Node((leftNum / rightNum).toString());
+            }
+        break;
+        case "^":
+            newNode = new Node(Math.pow(leftNum, rightNum).toString());
+        break;
+    }
+    return newNode;
+}
+
+function nodeSubstitute(node, newNode) {
+    newNode.parent = node.parent;
+    if(node.parent !== null) {
+        if(node.parent.left === node) {
+            node.parent.left = newNode;
+        }
+        else {
+            node.parent.right = newNode;
+        }
+    }
+    return newNode;
+}
+
+function simplifyAddition(node) {
+    var leftNum = toNumber(node.left);
+    var rightNum = toNumber(node.right);
+    var newNode = null;
+    if(!isNaN(leftNum) && !isNaN(rightNum)) {
+        newNode = calculate(node, leftNum, rightNum);
+    }
+    else if(!isNaN(leftNum)) {
+        if( leftNum === 0 ) {
+            newNode = node.right;
+        }
+    }
+    else if(!isNaN(rightNum)) {
+        if( rightNum === 0 ) {
+            newNode = node.left;
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplifyBinaryMinus(node) {
+    var newNode = null;
+    var leftNum = toNumber(node.left);
+    if(!isNaN(leftNum)) {
+        newNode = new Node((leftNum * -1).toString());
+    }
+    return newNode
+}
+
+
+function simplifySubstraction(node) {
+    var newNode = null;
+    if(node.right === null) {
+        newNode = simplifyBinaryMinus(node);
+    }
+    else {
+        var leftNum = toNumber(node.left);
+        var rightNum = toNumber(node.right);
+
+        if(!isNaN(leftNum) && !isNaN(rightNum)) {
+            newNode = calculate(node, leftNum, rightNum);
+        }
+        else if(!isNaN(leftNum)) {
+            if( leftNum === 0 ) {
+                node.left = node.right;
+                node.right = null;
+            }
+        }
+        else if(!isNaN(rightNum)) {
+            if( rightNum === 0 ) {
+                newNode = node.left;
+            }
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplifyMultiplication(node) {
+    var leftNum = toNumber(node.left);
+    var rightNum = toNumber(node.right);
+    var newNode = null;
+    if(!isNaN(leftNum) && !isNaN(rightNum)) {
+        newNode = calculate(node, leftNum, rightNum);
+    }
+    else if(!isNaN(leftNum)) {
+        if(leftNum === 0) {
+            newNode = new Node("0");
+        }
+        else if(leftNum === 1) {
+            newNode = node.right;
+        }
+    }
+    else if(!isNaN(rightNum)) {
+        if( rightNum === 0 ) {
+            newNode = new Node("0");
+        }
+        else if( rightNum === 1 ) {
+            newNode = node.left;
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplifyDivision(node) {
+    var leftNum = toNumber(node.left);
+    var rightNum = toNumber(node.right);
+    var newNode = null;
+    if(!isNaN(leftNum) && !isNaN(rightNum)) {
+        newNode = calculate(node, leftNum, rightNum);
+    }
+    else if(!isNaN(leftNum)) {
+        if(leftNum === 0) {
+            newNode = new Node("0");
+        }
+    }
+    else if(!isNaN(rightNum)) {
+        if( rightNum === 1 ) {
+            newNode = node.left;
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplifyPower(node) {
+    var leftNum = toNumber(node.left);
+    var rightNum = toNumber(node.right);
+    var newNode = null;
+    if(!isNaN(leftNum) && !isNaN(rightNum)) {
+        newNode = calculate(node, leftNum, rightNum);
+    }
+    else if(!isNaN(leftNum)) {
+        if(leftNum === 0) {
+            newNode = new Node("0");
+        }
+        else if(leftNum === 1) {
+            newNode = new Node("1");
+        }
+    }
+    else if(!isNaN(rightNum)) {
+        if(rightNum === "0") {
+            newNode = new Node("1");
+        }
+        else if(rightNum === 1) {
+            newNode = node.left;
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function calculateLog(node, leftNum, rightNum) {
+    var count = 0;
+    while(rightNum != 1) {
+        if(rightNum % leftNum === 0) {
+            rightNum = rightNum / leftNum;
+            count++;
+        }
+        else {
+            return null;
+        }
+    }
+    return new Node(count.toString());
+}
+
+function simplifyLog(node) {
+    var leftNum = toNumber(node.left);
+    var rightNum = toNumber(node.right);
+    var newNode = null;
+    if(!isNaN(leftNum) && !isNaN(rightNum)) {
+        newNode = calculateLog(node, leftNum, rightNum);
+    }
+
+    else if(!isNaN(rightNum)) {
+     if(rightNum === 1) {
+            newNode = new Node("0");
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplifyLn(node) {
+    var leftNum = toNumber(node.left);
+    var newNode = null;
+    if(!isNaN(leftNum)) {
+     if(leftNum === 1) {
+            newNode = new Node("0");
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function calculateRt(node, leftNum, rightNum) {
+    rt = Math.pow(rightNum, 1 / leftNum);
+    if(rt % 1 === 0) {
+        return new Node(rt.toString());
+    }
+    return null;
+}
+
+function simplifyRt(node) {
+    var leftNum = toNumber(node.left);
+    var rightNum = toNumber(node.right);
+    var newNode = null;
+    if(!isNaN(leftNum) && !isNaN(rightNum)) {
+        newNode = calculateRt(node, leftNum, rightNum);
+    }
+    else if(!isNaN(leftNum)) {
+        if(leftNum === 1) {
+            newNode = node.right;
+        }
+    }
+    else if(!isNaN(rightNum)) {
+        if(rightNum === 0) {
+            newNode = new Node("0");
+        }
+        else if(rightNum === 1) {
+            newNode = new Node("1");
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplifySqrt(node) {
+    var leftNum = 2;
+    var rightNum = toNumber(node.left);
+    var newNode = null;
+
+    if(!isNaN(rightNum)) {
+        newNode = calculateRt(node, leftNum, rightNum);
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplifyTrigonometry(node) {
+    var newNode = null;
+    var leftNum = toNumber(node.left);
+
+    if(!isNaN(leftNum) && leftNum === 0) {
+        switch(node.token) {
+            case "sin":
+                newNode = new Node("0");
+            break;
+            case "cos":
+                newNode = new Node("1");
+            break;
+        }
+    }
+
+    if(newNode !== null) {
+        return nodeSubstitute(node, newNode);
+    }
+    return node;
+}
+
+function simplify(node) {
+    if(node === null) {
+        return null;
+    }
+    if(node.left !== null) {
+        node.left = simplify(node.left);
+    }
+    if(node.right !== null) {
+        node.right = simplify(node.right);
+    }
+
+    switch(node.token) {
+    case "+":
+        return simplifyAddition(node);
+    case "-":
+        return simplifySubstraction(node);
+    case "*":
+        return simplifyMultiplication(node);
+    case "/":
+        return simplifyDivision(node);
+    case "^":
+        return simplifyPower(node);
+    case "log":
+        return simplifyLog(node);
+    case "ln":
+        return simplifyLn(node);
+    case "sqrt":
+        return simplifySqrt(node);;
+    case "rt":
+        return simplifyRt(node);;
+    case "sin":
+    case "cos":
+    case "tg":
+    case "ctg":
+        return simplifyTrigonometry(node);
+    }
+    return node;
+}
+
 function derivative(node) {
     if(node === null) {
         return null;
@@ -455,32 +848,16 @@ function derivative(node) {
         return rtDerivative(node, left, right);
     break;
     case "sin":
-        return connectNodes(new Node("*"),
-            connectNodes(new Node("cos"), copyTree(node.left), null), // cos(f(x))
-            left); //f'(x)
+        return sinDerivative(node, left, right);
     break;
     case "cos":
-        return connectNodes(new Node("-"),
-            connectNodes(new Node("*"),
-                connectNodes(new Node("sin"), copyTree(node.left), null), // sin(f(x))
-                left), //f'(x)
-            null);
+        return cosDerivative(node, left, right);
     break;
     case "tg":
-        return connectNodes(new Node("/"),
-                left, //f'(x)
-                connectNodes(new Node("^"),
-                    connectNodes(new Node("cos"), copyTree(node.left), null), // cos(f(x))
-                    new Node("2")));
+        return tgDerivative(node, left, right);
     break;
     case "ctg":
-        return connectNodes(new Node("-"),
-            connectNodes(new Node("/"),
-                left,
-                connectNodes(new Node("^"),
-                    connectNodes(new Node("sin"), copyTree(node.left), null), // sin(f(x))
-                    new Node("2"))),
-            null);
+        return ctgDerivative(node, left, right);
     break;
     case "x":
         return new Node("1");
@@ -519,7 +896,7 @@ function isLetter(c) {
 }
 
 function isDigit(c) {
-  return c >= '1' && c <= '9';
+  return c >= '0' && c <= '9';
 }
 
 function processFunction(str) {
