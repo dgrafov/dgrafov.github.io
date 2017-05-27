@@ -11,6 +11,7 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 // f(x) / f(x)*k ????
 // u(x)/(f(x)/g(x))
 // (-x)^2k
+// f(x) + (-g(x))
 
 // log(f(x), f(x))
 
@@ -211,6 +212,7 @@ function buildTree(input) {
 
         }
         return [true, simplify(outStack[0])];
+        //return [true, outStack[0]];
     }
 
     return [false, error];
@@ -512,11 +514,18 @@ function simplifyAddition(node) {
             newNode = node.left;
         }
     }
-
+    var ret = node;
     if(newNode !== null) {
-        return nodeSubstitute(node, newNode);
+        ret = nodeSubstitute(node, newNode);
     }
-    return node;
+
+    if( ret.right.token === "-" && ret.right.right === null ) {
+        //unary minus to the right
+        ret.token = "-";
+        ret.right = ret.right.left;
+    }
+
+    return ret;
 }
 
 function simplifyBinaryMinus(node) {
@@ -557,12 +566,20 @@ function simplifySubstraction(node) {
                 newNode = node.left;
             }
         }
+
     }
 
+    var ret = node;
     if(newNode !== null) {
-        return nodeSubstitute(node, newNode);
+        ret = nodeSubstitute(node, newNode);
     }
-    return node;
+
+    if( ret.right != null && ret.right.token === "-" && ret.right.right === null ) {
+        //unary minus to the right
+        ret.token = "+";
+        ret.right = ret.right.left;
+    }
+    return ret;
 }
 
 function simplifyMultiplication(node) {
