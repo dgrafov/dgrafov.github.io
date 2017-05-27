@@ -525,6 +525,11 @@ function simplifyBinaryMinus(node) {
     if(!isNaN(leftNum)) {
         newNode = new Node((leftNum * -1).toString());
     }
+    else {
+        if(node.left.token === "-" && node.left.right === null) {
+            newNode = node.left.left;
+        }
+    }
     return newNode
 }
 
