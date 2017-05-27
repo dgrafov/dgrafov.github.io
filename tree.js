@@ -34,9 +34,7 @@ function showCalculate() {
         console.log("calculate: " + input);
         var ret = buildTree(input);
         if(ret[0] === true) {
-
-            var derivativeTree = simplify(ret[1]);
-            //var derivativeTree = derivative(ret[1]);
+            var derivativeTree = simplify(derivative(ret[1]));
             drawTree(derivativeTree);
         }
         else {
@@ -212,7 +210,7 @@ function buildTree(input) {
             }
 
         }
-        return [true, outStack[0]];
+        return [true, simplify(outStack[0])];
     }
 
     return [false, error];
