@@ -1,3 +1,9 @@
+var unknownFunction = "Неизвестная функция: ";
+var unknownSymbol = "Неизвестный символ: ";
+var noClosingBracket = "Не хватает закрывающей скобки";
+var noOpeningBracket = "Не хватает открывающей скобки";
+var notEnoughOperands = "Не хватает операндов для оператора: ";
+
 function buildTree(input) {
     var opStack = [];
     var outStack = [];
@@ -41,7 +47,10 @@ function buildTree(input) {
             if(opStack.length > 0 && opStack[opStack.length - 1] === '(') {
                 opStack.pop();
                 if(opStack.length > 0 && opStack[opStack.length - 1].func === true) {
-                    popOperatorFromStack(opStack, outStack);
+                    var ret = popOperatorFromStack(opStack, outStack);
+                    if(ret.length > 0) {
+                        error = ret;
+                    }
                 }
             }
             else {
@@ -56,7 +65,10 @@ function buildTree(input) {
 
             while(opStack.length > 0 && opStack[opStack.length - 1] !== '(')
             {
-                popOperatorFromStack(opStack, outStack);
+                var ret = popOperatorFromStack(opStack, outStack);
+                if(ret.length > 0) {
+                    error = ret;
+                }
             }
 
             if(opStack.length == 0) {
@@ -113,16 +125,24 @@ function buildTree(input) {
     }
     if(error === "") {
         while(opStack.length > 0 && error === "") {
-            if(opStack[opStack.length - 1].token == '(' ) {
+            if(opStack[opStack.length - 1] === "(" ) {
                 error = noClosingBracket;
             }
             else {
-                popOperatorFromStack(opStack, outStack);
+                var ret = popOperatorFromStack(opStack, outStack);
+                if(ret.length > 0) {
+                    error = ret;
+                }
             }
 
         }
-        return [true, simplify(outStack[0])];
-        //return [true, outStack[0]];
+        if(error.length > 0) {
+            return [false, error];
+        }
+        else {
+            return [true, simplify(outStack[0])];
+        }
+
     }
 
     return [false, error];
@@ -351,15 +371,23 @@ function isOperator(token) {
 function popOperatorFromStack(operatorStack, outputStack) {
     var operator = operatorStack.pop();
     var node = new Node(operator.token);
-    if (operator.unary === false) {
-        node.right = outputStack.pop();
-        node.right.parent = node;
+
+    try {
+        if (operator.unary === false) {
+            node.right = outputStack.pop();
+            node.right.parent = node;
+        }
+
+        node.left = outputStack.pop();
+        node.left.parent = node;
+
+        outputStack.push(node);
     }
-
-    node.left = outputStack.pop();
-    node.left.parent = node;
-
-    outputStack.push(node);
+    catch (err) {
+        console.log(err.message);
+        return notEnoughOperands + operator.token;
+    }
+    return "";
 }
 
 function copyTree(root) {

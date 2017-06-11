@@ -1,9 +1,5 @@
 var noFunctionError = "Введите функцию";
 var noTreeError = "Сначала вычислите производную";
-var unknownFunction = "Неизвестная функция: "
-var unknownSymbol = "Неизвестный символ: "
-var noClosingBracket = "Не хватает закрывающей скобки"
-var noOpeningBracket = "Не хватает открывающей скобки"
 
 //simplification
 
@@ -26,8 +22,6 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 
 //TODO Fix a stupid approach of having only left child for unary operators and functions. It should be left for post-operator
 //and right - for pre-operator
-
-//TODO bugs: x+, (x+1
 
 var originalTree = null;
 var derivativeTree = null;
