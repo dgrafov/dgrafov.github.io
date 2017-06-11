@@ -22,6 +22,7 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 
 //add arc- functions
 
+// TODO introduce a separate token for unary minus not to check children every time
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
 }
@@ -55,6 +56,7 @@ function showBuildTree() {
         console.log("buildTree:" + input);
         var ret = buildTree(input);
         if(ret[0] === true) {
+            console.log(buildExpression(ret[1]));
             drawTree(ret[1]);
         }
         else {
@@ -108,7 +110,8 @@ function buildTree(input) {
 
             while(opStack.length > 0
                 && opStack[opStack.length - 1] !== '('
-                && op.prio <= opStack[opStack.length - 1].prio)
+                && (op.unary === false && op.prio <= opStack[opStack.length - 1].prio
+                    || op.unary === true && op.prio < opStack[opStack.length - 1].prio))
             {
                 popOperatorFromStack(opStack, outStack);
             }
@@ -1099,7 +1102,7 @@ function Operator(token, unary, func) {
                 this.prio = 3;
             }
             else if (token === '*' || token === '/' ) {
-                this.prio = 4;
+                this.prio = 5;
             }
             else if (token === '^') {
                 this.prio = 6;
@@ -1113,6 +1116,73 @@ function isOperator(token) {
         return true;
     }
     return false;
+}
+
+
+function buildExpression(node) {
+    //TODO Fix a stupid approach of having only left child for unary operators and functions.
+    //If it were only right, it'd be much easier here
+    var out = "";
+    if(node.left === null && node.right === null) {
+        // constant or vairable
+        return node.token;
+    }
+
+    var leftStr = buildExpression(node.left);
+    var rightStr = "";
+
+
+    if(node.right !== null) {
+        rightStr = buildExpression(node.right);
+    }
+
+    if(isOperator(node.token)) {
+        var opening = "";
+        var closing = "";
+        if(node.parent !== null && isOperator(node.parent.token)) {
+            var parentOp = null;
+            var op = null;
+            if(node.parent.right === null) {
+                parentOp = new Operator(node.parent.token, true, false);
+            }
+            else {
+                parentOp = new Operator(node.parent.token, false, false);
+            }
+
+            if(node.right === null) {
+                op = new Operator(node.token, true, false);
+            }
+            else {
+                op = new Operator(node.token, false, false);
+            }
+
+            if(op.prio < parentOp.prio || (parentOp.token === "-" && op.token === "+")) {
+                opening = "(";
+                closing = ")";
+            }
+
+        }
+
+
+        if (node.right === null) {
+            out = opening + node.token + leftStr + closing;
+        }
+        else {
+            out = opening + leftStr + " " + node.token  + " " + rightStr + closing;
+        }
+
+    }
+    else {
+        //function
+        if (node.right === null) {
+            out = node.token + "(" + leftStr + ")";
+        }
+        else {
+            out = node.token + "(" + leftStr + ", " + rightStr + ")";
+        }
+    }
+    return out;
+
 }
 
 
