@@ -9,7 +9,7 @@
 
 <h1>Символьное вычисление производной</h1>
 
-<h2>Поддерживаемые символы <button id="supportedSymbolsButton" onclick="showSupportedSymbols()">Показать</button></h2>
+<h2>Поддерживаемые символы: <button id="supportedSymbolsButton" onclick="showSupportedSymbols()">v</button></h2>
 <table id="supportedSymbols"  style="display: none">
     <tr>
         <th>Обозначение</th>
@@ -123,8 +123,8 @@
 </ul>
 
 <div>
-    f(x) = <input type="text" id="function">
-    <button onclick="showCalculate()">Вычислить df(x)/dx</button><button onclick="showBuildTree()">Построить дерево</button>
+    f(x) = <input type="text" id="function"/>
+    <button onclick="calculateDerivative()">Вычислить df(x)/dx</button>
 </div>
 
 <div id="errorDiv" style="display: none">
@@ -132,11 +132,23 @@
     <p id="errorText"></p>
 </div>
 
-<div id="treeDiv" style="display: none">
-    <h2>Дерево синтaксического разбора <button id="hideTreeButton" onclick="hideTree()">Убрать</button></h2>
-    <canvas id="treeCanvas">
-        Your browser does not support the canvas element.
-    </canvas>
+<div id="difDiv" style="display: none">
+    <h2>Производная:</h2>
+    df(x)/dx = <span id="result"></span>
+
+    <h2>Дерево синтaксического разбора функции: <button id="originalTreeButton" onclick="showOriginalTree()">v</button></h2>
+    <div id="originalTreeDiv" style="display: none">
+        <canvas id="originalTreeCanvas">
+            Your browser does not support the canvas element.
+        </canvas>
+    </div>
+
+    <h2>Дерево синтaксического разбора производной: <button id="derivativeTreeButton" onclick="showDerivativeTree()">v</button></h2>
+    <div id="derivativeTreeDiv" style="display: none">
+        <canvas id="derivativeTreeCanvas">
+            Your browser does not support the canvas element.
+        </canvas>
+    </div>
 </div>
 
 </body>

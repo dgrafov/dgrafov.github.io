@@ -1,4 +1,5 @@
 var noFunctionError = "Введите функцию";
+var noTreeError = "Сначала вычислите производную";
 var unknownFunction = "Неизвестная функция: "
 var unknownSymbol = "Неизвестный символ: "
 var noClosingBracket = "Не хватает закрывающей скобки"
@@ -22,22 +23,29 @@ var noOpeningBracket = "Не хватает открывающей скобки"
 
 //add arc- functions
 
-// TODO introduce a separate token for unary minus not to check children every time
+// TODO Refactoring introduce a separate token for unary minus not to check children every time
+
+//TODO Fix a stupid approach of having only left child for unary operators and functions. It should be left for post-operator
+//and right - for pre-operator
+
+var originalTree = null;
+var derivativeTree = null;
+
 function loadExample(exampleId) {
     document.getElementById('function').value = document.getElementById(exampleId).innerHTML;
 }
 
-function showCalculate() {
-    hideTree();
-    hideError();
+function calculateDerivative() {
+
     var input = document.getElementById('function').value;
 
     if(input.length > 0) {
-        console.log("calculate: " + input);
         var ret = buildTree(input);
         if(ret[0] === true) {
-            var derivativeTree = simplify(derivative(ret[1]));
-            drawTree(derivativeTree);
+            derivativeTree = simplify(derivative(ret[1]));
+            originalTree = ret[1];
+
+            displayResult(buildExpression(derivativeTree));
         }
         else {
             displayError(ret[1]);
@@ -48,47 +56,95 @@ function showCalculate() {
     }
 }
 
-function showBuildTree() {
-    hideTree();
-    hideError();
-    var input = document.getElementById('function').value;
-    if(input.length > 0) {
-        console.log("buildTree:" + input);
-        var ret = buildTree(input);
-        if(ret[0] === true) {
-            console.log(buildExpression(ret[1]));
-            drawTree(ret[1]);
-        }
-        else {
-            displayError(ret[1]);
-        }
+function showOriginalTree() {
+    if(originalTree !== null) {
+        drawTree(originalTree, "originalTreeDiv", "originalTreeCanvas");
+
+        var button = document.getElementById('originalTreeButton');
+        button.onclick = hideOriginalTree;
+        button.innerHTML = "^";
     }
     else {
-        displayError(noFunctionError);
+        displayError(noTreeError);
     }
+}
+
+function hideOriginalTree() {
+    document.getElementById('originalTreeDiv').style.display = "none";
+
+    var button = document.getElementById('originalTreeButton');
+    button.onclick = showOriginalTree;
+    button.innerHTML = "v";
+}
+
+function showDerivativeTree() {
+    if(derivativeTree !== null) {
+        drawTree(derivativeTree, "derivativeTreeDiv", "derivativeTreeCanvas");
+
+        var button = document.getElementById('derivativeTreeButton');
+        button.onclick = hideDerivativeTree;
+        button.innerHTML = "^";
+    }
+    else {
+        displayError(noTreeError);
+    }
+}
+
+function hideDerivativeTree() {
+    document.getElementById('derivativeTreeDiv').style.display = "none";
+
+    var button = document.getElementById('derivativeTreeButton');
+    button.onclick = showDerivativeTree;
+    button.innerHTML = "v";
+}
+
+function drawTree(root, divId, canvasId) {
+    document.getElementById(divId).style.display = "block";
+    var canvas = document.getElementById(canvasId);
+
+    var nodeRadPx = 12;
+
+    var height = getTreeHeight(root);
+    var width = Math.pow(2, height - 1);
+
+    var heightPx = nodeRadPx * 2 * height * 2;
+    var widthPx =  nodeRadPx * 2 * width * 2;
+
+    canvas.width = widthPx;
+    canvas.height = heightPx;
+
+    drawSubTree(root, canvas, 0, widthPx, nodeRadPx + 1, nodeRadPx);
+}
+
+function displayError(msg) {
+    document.getElementById('errorDiv').style.display = "block";
+    document.getElementById('errorText').innerHTML = msg;
+}
+
+function displayResult(res) {
+    document.getElementById('difDiv').style.display = "block";
+    document.getElementById('result').innerHTML = res;
 }
 
 function showSupportedSymbols() {
     document.getElementById('supportedSymbols').style.display = "block";
     var button = document.getElementById('supportedSymbolsButton');
     button.onclick = hideSupportedSymbols;
-    button.innerHTML = "Скрыть";
+    button.innerHTML = "^";
 }
 
 function hideSupportedSymbols() {
     document.getElementById('supportedSymbols').style.display = "none";
     var button = document.getElementById('supportedSymbolsButton');
     button.onclick = showSupportedSymbols;
-    button.innerHTML = "Показать";
+    button.innerHTML = "v";
 }
 
-function hideTree() {
-    document.getElementById('treeDiv').style.display = "none";
-}
 
 function hideError() {
     document.getElementById('errorDiv').style.display = "none";
 }
+
 
 function buildTree(input) {
     input = input.split(' ').join('');
@@ -995,28 +1051,6 @@ function printTree(root) {
     console.log(str);
 }
 
-function drawTree(root) {
-    document.getElementById('treeDiv').style.display = "block";
-    var canvas = document.getElementById('treeCanvas');
-
-    var nodeRadPx = 12;
-
-    var height = getTreeHeight(root);
-    var width = Math.pow(2, height - 1);
-
-    var heightPx = nodeRadPx * 2 * height * 2;
-    var widthPx =  nodeRadPx * 2 * width * 2;
-    console.log("width: " + widthPx + ", height: " + heightPx);
-    canvas.width = widthPx;
-    canvas.height = heightPx;
-
-    drawSubTree(root, canvas, 0, widthPx, nodeRadPx + 1, nodeRadPx);
-}
-
-function displayError(msg) {
-    document.getElementById('errorDiv').style.display = "block";
-    document.getElementById('errorText').innerHTML = msg;
-}
 
 function drawSubTree(root, canvas, xMin, xMax, y, nodeRadPx) {
         var ctx = canvas.getContext("2d");
@@ -1120,8 +1154,6 @@ function isOperator(token) {
 
 
 function buildExpression(node) {
-    //TODO Fix a stupid approach of having only left child for unary operators and functions.
-    //If it were only right, it'd be much easier here
     var out = "";
     if(node.left === null && node.right === null) {
         // constant or vairable
@@ -1156,7 +1188,9 @@ function buildExpression(node) {
                 op = new Operator(node.token, false, false);
             }
 
-            if(op.prio < parentOp.prio || (parentOp.token === "-" && op.token === "+")) {
+            if(op.prio < parentOp.prio
+                || (op.prio === parentOp.prio && ((parentOp.token === "-"  && node.parent.right === node) || parentOp.token === "^"))) {
+
                 opening = "(";
                 closing = ")";
             }
