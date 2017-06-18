@@ -183,14 +183,14 @@
     <h2>Производная:</h2>
     df(x)/dx = <span id="result"></span>
 
-    <h2>Дерево синтаксического разбора функции: <button id="originalTreeButton" onclick="showOriginalTree()">v</button></h2>
+    <h2>Синтаксическое дерево для функции: <button id="originalTreeButton" onclick="showOriginalTree()">v</button></h2>
     <div id="originalTreeDiv" style="display: none">
         <canvas id="originalTreeCanvas">
             Your browser does not support the canvas element.
         </canvas>
     </div>
 
-    <h2>Дерево синтаксического разбора производной: <button id="derivativeTreeButton" onclick="showDerivativeTree()">v</button></h2>
+    <h2>Синтаксическое дерево для производной: <button id="derivativeTreeButton" onclick="showDerivativeTree()">v</button></h2>
     <div id="derivativeTreeDiv" style="display: none">
         <canvas id="derivativeTreeCanvas">
             Your browser does not support the canvas element.
@@ -198,5 +198,15 @@
     </div>
 </div>
 
+<h2>О проекте:</h2>
+<p>
+Эта страница демонстрирует реализацию символьного вычисления производной функции одной переменной с использованием
+<a href="https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D0%BE%D0%B5_%D1%81%D0%B8%D0%BD%D1%82%D0%B0%D0%BA%D1%81%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE">абстрактного синтаксического дерева</a>.
+Дерево строится с помощью <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D0%BE%D0%B9_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D0%B8" >Алгоритма сортировочной станции</a>.
+После вычисления производной можно также посмотреть деревья, которые получились при разборе исходной функции и вычислении ее производной.
+</p>
+<p>
+Если у вас есть вопрос, можете написать мне письмо: <a href="mailto:grafovdv@gmail.com">grafovdv@gmail.com</a>
+</p>
 </body>
 </html>

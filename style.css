@@ -2,11 +2,16 @@ body {
     font-family: "Courier New";
     color: #353535;
     background-color: #efefef;
-    margin: 50px
+    margin: 50px;
+    width: 760px;
 }
 
 h1, h2, th {
     color: #2b522b;
+}
+
+h1 {
+    margin: : auto;
 }
 
 table {
