@@ -94,7 +94,7 @@ var russian =
     aboutHeader: "О проекте:",
     about: "<p>" +
         "Эта страница демонстрирует реализацию символьного вычисления производной функции одной переменной с использованием" +
-        "<a href='https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D0%BE%D0%B5_%D1%81%D0%B8%D0%BD%D1%82%D0%B0%D0%BA%D1%81%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE'>абстрактного синтаксического дерева</a>." +
+        "<a href='https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D0%BE%D0%B5_%D1%81%D0%B8%D0%BD%D1%82%D0%B0%D0%BA%D1%81%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE'>абстрактного синтаксического дерева</a>. " +
         "Дерево строится с помощью <a href='https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D0%BE%D0%B9_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D0%B8' >Алгоритма сортировочной станции</a>." +
         "</p>" +
         "<p>" +
@@ -204,8 +204,8 @@ var english =
     aboutHeader: "About:",
     about: "<p>" +
         "The page demonstrates the implementation of the symbolic computation of the derivative using the " +
-        "<a href='https://en.wikipedia.org/wiki/Abstract_syntax_tree'>abstract syntax tree</a>." +
-        "The tree is built by the <a href='https://en.wikipedia.org/wiki/Shunting-yard_algorithm' >Shunting-yard algorithm</a>." +
+        "<a href='https://en.wikipedia.org/wiki/Abstract_syntax_tree'>abstract syntax tree</a>. " +
+        "The tree is built by the <a href='https://en.wikipedia.org/wiki/Shunting-yard_algorithm' >Shunting-yard algorithm</a>. " +
         "</p>" +
         "<p>" +
         "After the derivative computation you can also see the syntax trees which were built from the input function and while computing the derivative." +
