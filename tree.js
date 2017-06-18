@@ -292,7 +292,7 @@ function drawSubTree(root, canvas, xMin, xMax, y, nodeRadPx) {
     //draw circle and fill
     ctx.beginPath();
     ctx.arc(x, y, nodeRadPx, 0, 2*Math.PI);
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#efefef';
     ctx.fill();
     ctx.stroke();
 

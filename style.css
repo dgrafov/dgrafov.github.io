@@ -1,0 +1,22 @@
+body {
+    font-family: "Courier New";
+    color: #353535;
+    background-color: #efefef;
+    margin: 50px
+}
+
+h1, h2, th {
+    color: #2b522b;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+}
+
+#errorText {
+    color: red;
+}
