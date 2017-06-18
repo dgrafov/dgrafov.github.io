@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Символьное вычисление производной</title>
+    <title>Symbolic computation of the derivative</title>
     <script src="languages.js"></script>
     <script src="loader.js"></script>
     <script src="tree.js"></script>
@@ -61,96 +61,15 @@
     <a href="index.html?lang=en">EN</a>
 </div>
 
-<h1 id="mainHeader">Символьное вычисление производной</h1>
+<h1 id="mainHeader"></h1>
 
-<h2 id="supportedSymbolsHeader" class="inline">Поддерживаемые символы: </h2>
+<h2 id="supportedSymbolsHeader" class="inline"></h2>
 <button class="inline" id="supportedSymbolsButton" onclick="showSupportedSymbols()">v</button>
 
 <table id="supportedSymbols"  style="display: none">
-    <tr>
-        <th>Обозначение</th>
-        <th>Описание</th>
-    </tr>
-    <tr>
-        <td>.</td>
-        <td>Десятичный разделитель</td>
-    </tr>
-    <tr>
-        <td>,</td>
-        <td>Разделитель аргументов функции</td>
-    </tr>
-    <tr>
-        <td>+</td>
-        <td>Сложение</td>
-    </tr>
-    <tr>
-        <td>-</td>
-        <td>Вычитание</td>
-    </tr>
-    <tr>
-        <td>-</td>
-        <td>Унарный минус</td>
-    </tr>
-    <tr>
-        <td>*</td>
-        <td>Умножение</td>
-    </tr>
-    <tr>
-        <td>/</td>
-        <td>Деление</td>
-    </tr>
-    <tr>
-        <td>^</td>
-        <td>Возведение в степень</td>
-    </tr>
-    <tr>
-        <td>e</td>
-        <td>Константа, основание натурального логарифма</td>
-    </tr>
-    <tr>
-        <td>(</td>
-        <td>Открывающая скобка</td>
-    </tr>
-    <tr>
-        <td>)</td>
-        <td>Закрывающая скобка</td>
-    </tr>
-    <tr>
-        <td>sqrt</td>
-        <td>Извлечение квадратного корня: sqrt(x)</td>
-    </tr>
-    <tr>
-        <td>rt</td>
-        <td>Извлечение корня заданной степени: rt(n, x)</td>
-    </tr>
-    <tr>
-        <td>sin</td>
-        <td>Синус: sin(x)</td>
-    </tr>
-    <tr>
-        <td>cos</td>
-        <td>Косинус: cos(x)</td>
-    </tr>
-    <tr>
-        <td>tg</td>
-        <td>Тангенс: tg(x)</td>
-    </tr>
-    <tr>
-        <td>ctg</td>
-        <td>Котангенс: ctg(x)</td>
-    </tr>
-    <tr>
-        <td>ln</td>
-        <td>Натуральный логарифм: ln(x)</td>
-    </tr>
-    <tr>
-        <td>log</td>
-        <td>Логарифм по заданномy основанию: log(n, x)</td>
-    </tr>
-
 </table>
 
-<h2 id="examplesHeader">Примеры:</h2>
+<h2 id="examplesHeader"></h2>
 <ul>
     <li>
         <button id="example1Button" onclick="loadExample('example1')">Вставить</button>
@@ -180,19 +99,19 @@
 
 <div>
     f(x) = <input type="text" id="function"/>
-    <button id="calculateButton" onclick="calculateDerivative()">Вычислить df(x)/dx</button>
+    <button id="calculateButton" onclick="calculateDerivative()"></button>
 </div>
 
 <div id="errorDiv" style="display: none">
-    <h2 id="errorHeader">Что-то пошло не так:</h2>
+    <h2 id="errorHeader"></h2>
     <p id="errorText"></p>
 </div>
 
 <div id="difDiv" style="display: none">
-    <h2 id="derivativeHeader">Производная:</h2>
+    <h2 id="derivativeHeader"></h2>
     df(x)/dx = <span id="result"></span>
     <div>
-        <h2 id="functionSyntaxTreeHeader" class="inline">Синтаксическое дерево для функции: </h2>
+        <h2 id="functionSyntaxTreeHeader" class="inline"></h2>
         <button id="originalTreeButton" class="inline" onclick="showOriginalTree()">v</button>
         <div id="originalTreeDiv" style="display: none">
             <canvas id="originalTreeCanvas">
@@ -202,7 +121,7 @@
     </div>
 
     <div>
-        <h2 id="derivativeSyntaxTreeHeader" class="inline">Синтаксическое дерево для производной: </h2>
+        <h2 id="derivativeSyntaxTreeHeader" class="inline"></h2>
         <button id="derivativeTreeButton" class="inline" onclick="showDerivativeTree()">v</button>
         <div id="derivativeTreeDiv" style="display: none">
             <canvas id="derivativeTreeCanvas">
@@ -212,22 +131,8 @@
     </div>
 </div>
 
-<h2 id="aboutHeader">О проекте:</h2>
+<h2 id="aboutHeader"></h2>
 <div id="about">
-<p>
-Эта страница демонстрирует реализацию символьного вычисления производной функции одной переменной с использованием
-<a href="https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D0%BE%D0%B5_%D1%81%D0%B8%D0%BD%D1%82%D0%B0%D0%BA%D1%81%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE">абстрактного синтаксического дерева</a>.
-Дерево строится с помощью <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D0%BE%D0%B9_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D0%B8" >Алгоритма сортировочной станции</a>.
-</p>
-<p>
-После вычисления производной можно также посмотреть деревья, которые получились при разборе исходной функции и вычислении ее производной.
-</p>
-<p>
-Все вычисления производятся в браузере, без участия сервера. Полный код реализаци можно посмотреть в коде страницы.
-</p>
-<p>
-Если у вас есть вопрос, можете написать мне письмо: <a href="mailto:grafovdv@gmail.com">grafovdv@gmail.com</a>
-</p>
 </div>
 </body>
 </html>

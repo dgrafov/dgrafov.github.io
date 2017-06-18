@@ -86,7 +86,7 @@ var russian =
         "</tr>",
     examples: "Примеры: ",
     insertExample: "Вставить",
-    calculate: "Вычислить f(x)/dx",
+    calculate: "Вычислить df(x)/dx",
     errorHeader: "Что-то пошло не так:",
     derivativeHeader: "Производная:",
     functionSyntaxTreeHeader: "Синтаксическое дерево для функции: ",
@@ -196,7 +196,7 @@ var english =
         "</tr>",
     examples: "Examples: ",
     insertExample: "Insert",
-    calculate: "Calculate f(x)/dx",
+    calculate: "Calculate df(x)/dx",
     errorHeader: "Something went wrong:",
     derivativeHeader: "Derivative:",
     functionSyntaxTreeHeader: "Function syntax tree: ",
@@ -220,7 +220,7 @@ var english =
 
 
 
-var currentLanguage = russian
+var currentLanguage;
 
 function changeLanguage (language) {
     if ( currentLanguage !== language ) {
