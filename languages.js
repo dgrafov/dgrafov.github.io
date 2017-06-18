@@ -218,6 +218,8 @@ var english =
         "</p>"
 }
 
+
+
 var currentLanguage = russian
 
 function changeLanguage (language) {
@@ -242,4 +244,21 @@ function changeLanguage (language) {
         document.getElementById('aboutHeader').innerHTML = language.aboutHeader;
         document.getElementById('about').innerHTML = language.about;
     }
+}
+
+function getLanguage() {
+    var name = "lang";
+    if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search)) {
+        switch(decodeURIComponent(name[1])) {
+        case "en":
+            return english;
+        case "ru":
+            return russian;
+        default:
+            //constant
+            return english;
+        }
+    }
+    return english;
+
 }
