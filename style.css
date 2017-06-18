@@ -3,7 +3,7 @@ body {
     color: #353535;
     background-color: #efefef;
     margin: 50px;
-    width: 760px;
+    width: 960px;
 }
 
 h1, h2, th {
@@ -22,6 +22,14 @@ th, td {
     border: 1px solid black;
 }
 
+.inline {
+    display: inline-block
+}
+
 #errorText {
     color: red;
+}
+
+#language {
+    float: right;
 }

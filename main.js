@@ -1,6 +1,8 @@
 var noFunctionError = "Введите функцию";
 var noTreeError = "Сначала вычислите производную";
 
+//TODO localize errors
+
 //simplification
 
 // -1 * x

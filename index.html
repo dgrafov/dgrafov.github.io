@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Символьное вычисление производной</title>
+    <script src="languages.js"></script>
     <script src="tree.js"></script>
     <script src="simplify.js"></script>
     <script src="derivative.js"></script>
@@ -54,9 +55,16 @@
 </script>
 <!-- Google analytics -->
 
-<h1>Символьное вычисление производной</h1>
+<div id="language">
+    <button onclick="changeLanguage(russian)">Ru</button>
+    <button onclick="changeLanguage(english)">Eng</button>
+</div>
 
-<h2>Поддерживаемые символы: <button id="supportedSymbolsButton" onclick="showSupportedSymbols()">v</button></h2>
+<h1 id="mainHeader">Символьное вычисление производной</h1>
+
+<h2 id="supportedSymbolsHeader" class="inline">Поддерживаемые символы: </h2>
+<button class="inline" id="supportedSymbolsButton" onclick="showSupportedSymbols()">v</button>
+
 <table id="supportedSymbols"  style="display: none">
     <tr>
         <th>Обозначение</th>
@@ -112,7 +120,7 @@
     </tr>
     <tr>
         <td>rt</td>
-        <td>Извлечение квадратного корня заданной степени: rt(n, x)</td>
+        <td>Извлечение корня заданной степени: rt(n, x)</td>
     </tr>
     <tr>
         <td>sin</td>
@@ -141,72 +149,84 @@
 
 </table>
 
-<h2>Примеры:</h2>
+<h2 id="examplesHeader">Примеры:</h2>
 <ul>
     <li>
-        <button onclick="loadExample('example1')">Вставить</button>
+        <button id="example1Button" onclick="loadExample('example1')">Вставить</button>
         f(x) = <span id="example1">-cos(x) + sin(x) - tg(x) + ctg(x)</span>
     </li>
     <li>
-        <button onclick="loadExample('example2')">Вставить</button>
+        <button id="example2Button" onclick="loadExample('example2')">Вставить</button>
         f(x) = <span id="example2">x^2 * ln( x + 1 )</span>
     </li>
     <li>
-        <button onclick="loadExample('example3')">Вставить</button>
+        <button id="example3Button" onclick="loadExample('example3')">Вставить</button>
         f(x) = <span id="example3">(x+1)/e^(a+x)</span>
     </li>
     <li>
-        <button onclick="loadExample('example4')">Вставить</button>
+        <button id="example4Button" onclick="loadExample('example4')">Вставить</button>
         f(x) = <span id="example4">a^(2*x)</span>
     </li>
     <li>
-        <button onclick="loadExample('example5')">Вставить</button>
+        <button id="example5Button" onclick="loadExample('example5')">Вставить</button>
         f(x) = <span id="example5">log(2*x, x^2)</span>
     </li>
     <li>
-        <button onclick="loadExample('example6')">Вставить</button>
+        <button id="example6Button" onclick="loadExample('example6')">Вставить</button>
         f(x) = <span id="example6">rt(a, (x+1))</span>
     </li>
 </ul>
 
 <div>
     f(x) = <input type="text" id="function"/>
-    <button onclick="calculateDerivative()">Вычислить df(x)/dx</button>
+    <button id="calculateButton" onclick="calculateDerivative()">Вычислить df(x)/dx</button>
 </div>
 
 <div id="errorDiv" style="display: none">
-    <h2>Что-то пошло не так:</h2>
+    <h2 id="errorHeader">Что-то пошло не так:</h2>
     <p id="errorText"></p>
 </div>
 
 <div id="difDiv" style="display: none">
-    <h2>Производная:</h2>
+    <h2 id="derivativeHeader">Производная:</h2>
     df(x)/dx = <span id="result"></span>
-
-    <h2>Синтаксическое дерево для функции: <button id="originalTreeButton" onclick="showOriginalTree()">v</button></h2>
-    <div id="originalTreeDiv" style="display: none">
-        <canvas id="originalTreeCanvas">
-            Your browser does not support the canvas element.
-        </canvas>
+    <div>
+        <h2 id="functionSyntaxTreeHeader" class="inline">Синтаксическое дерево для функции: </h2>
+        <button id="originalTreeButton" class="inline" onclick="showOriginalTree()">v</button>
+        <div id="originalTreeDiv" style="display: none">
+            <canvas id="originalTreeCanvas">
+                Your browser does not support the canvas element.
+            </canvas>
+        </div>
     </div>
 
-    <h2>Синтаксическое дерево для производной: <button id="derivativeTreeButton" onclick="showDerivativeTree()">v</button></h2>
-    <div id="derivativeTreeDiv" style="display: none">
-        <canvas id="derivativeTreeCanvas">
-            Your browser does not support the canvas element.
-        </canvas>
+    <div>
+        <h2 id="derivativeSyntaxTreeHeader" class="inline">Синтаксическое дерево для производной: </h2>
+        <button id="derivativeTreeButton" class="inline" onclick="showDerivativeTree()">v</button>
+        <div id="derivativeTreeDiv" style="display: none">
+            <canvas id="derivativeTreeCanvas">
+                Your browser does not support the canvas element.
+            </canvas>
+        </div>
     </div>
 </div>
 
-<h2>О проекте:</h2>
+<h2 id="aboutHeader">О проекте:</h2>
+<div id="about">
 <p>
 Эта страница демонстрирует реализацию символьного вычисления производной функции одной переменной с использованием
 <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D0%BE%D0%B5_%D1%81%D0%B8%D0%BD%D1%82%D0%B0%D0%BA%D1%81%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE">абстрактного синтаксического дерева</a>.
 Дерево строится с помощью <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D0%BE%D0%B9_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D0%B8" >Алгоритма сортировочной станции</a>.
+</p>
+<p>
 После вычисления производной можно также посмотреть деревья, которые получились при разборе исходной функции и вычислении ее производной.
+</p>
+<p>
+Все вычисления производятся в браузере, без участия сервера. Полный код реализаци можно посмотреть в коде страницы.
 </p>
 <p>
 Если у вас есть вопрос, можете написать мне письмо: <a href="mailto:grafovdv@gmail.com">grafovdv@gmail.com</a>
 </p>
+</div>
 </body>
 </html>
