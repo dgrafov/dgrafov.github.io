@@ -237,25 +237,27 @@ var english =
 var currentLanguage = english;
 
 function changeLanguage (language) {
-    currentLanguage = language;
+    if (language !== currentLanguage) {
+        currentLanguage = language;
 
-    document.title = language.title;
-    document.getElementById('mainHeader').innerHTML = language.mainHeader;
+        document.title = language.title;
+        document.getElementById('mainHeader').innerHTML = language.mainHeader;
 
-    document.getElementById('supportedSymbolsHeader').innerHTML = language.supportedSymbols;
-    document.getElementById('supportedSymbols').innerHTML = language.supportedSymbolsTable;
-    document.getElementById('examplesHeader').innerHTML = language.examples;
-    for (i = 1; i < 7; i++) {
-        //loop all examples
-        document.getElementById('example' + i + 'Button').innerHTML = language.insertExample;
+        document.getElementById('supportedSymbolsHeader').innerHTML = language.supportedSymbols;
+        document.getElementById('supportedSymbols').innerHTML = language.supportedSymbolsTable;
+        document.getElementById('examplesHeader').innerHTML = language.examples;
+        for (i = 1; i < 7; i++) {
+            //loop all examples
+            document.getElementById('example' + i + 'Button').innerHTML = language.insertExample;
+        }
+        document.getElementById('calculateButton').innerHTML = language.calculate;
+        document.getElementById('errorHeader').innerHTML = language.errorHeader;
+        document.getElementById('derivativeHeader').innerHTML = language.derivativeHeader;
+        document.getElementById('functionSyntaxTreeHeader').innerHTML = language.functionSyntaxTreeHeader;
+        document.getElementById('derivativeSyntaxTreeHeader').innerHTML = language.derivativeSyntaxTreeHeader;
+        document.getElementById('aboutHeader').innerHTML = language.aboutHeader;
+        document.getElementById('about').innerHTML = language.about;
     }
-    document.getElementById('calculateButton').innerHTML = language.calculate;
-    document.getElementById('errorHeader').innerHTML = language.errorHeader;
-    document.getElementById('derivativeHeader').innerHTML = language.derivativeHeader;
-    document.getElementById('functionSyntaxTreeHeader').innerHTML = language.functionSyntaxTreeHeader;
-    document.getElementById('derivativeSyntaxTreeHeader').innerHTML = language.derivativeSyntaxTreeHeader;
-    document.getElementById('aboutHeader').innerHTML = language.aboutHeader;
-    document.getElementById('about').innerHTML = language.about;
 
 }
 

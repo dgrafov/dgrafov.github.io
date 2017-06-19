@@ -61,59 +61,138 @@
     <a href="index.html?lang=en"><img src="assets/United-Kingdom.png" alt="EN"></a>
 </div>
 
-<h1 id="mainHeader"></h1>
+<h1 id="mainHeader">Symbolic computation of the derivative</h1>
 
 <hr>
 
-<h2 id="supportedSymbolsHeader" class="inline"></h2>
+<h2 id="supportedSymbolsHeader" class="inline">Supported symbols: </h2>
 <button class="inline" id="supportedSymbolsButton" onclick="showSupportedSymbols()">v</button>
-
 <table id="supportedSymbols"  style="display: none">
+    <tr>
+        <th>Designation</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>.</td>
+        <td>Decimal separator</td>
+    </tr>
+    <tr>
+        <td>,</td>
+        <td>Function arguments separator</td>
+    </tr>
+    <tr>
+        <td>+</td>
+        <td>Addition</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>Substraction</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>Unary minus</td>
+    </tr>
+    <tr>
+        <td>*</td>
+        <td>Multiplication</td>
+    </tr>
+    <tr>
+        <td>/</td>
+        <td>Division</td>
+    </tr>
+    <tr>
+        <td>^</td>
+        <td>Exponentiation</td>
+    </tr>
+    <tr>
+        <td>e</td>
+        <td>A constant, Base of the natural logarithm</td>
+    </tr>
+    <tr>
+        <td>(</td>
+        <td>Opening bracket</td>
+    </tr>
+    <tr>
+        <td>)</td>
+        <td>Closing bracket</td>
+    </tr>
+    <tr>
+        <td>sqrt</td>
+        <td>Square root: sqrt(x)</td>
+    </tr>
+    <tr>
+        <td>rt</td>
+        <td>n-th root: rt(n, x)</td>
+    </tr>
+    <tr>
+        <td>sin</td>
+        <td>Sine: sin(x)</td>
+    </tr>
+    <tr>
+        <td>cos</td>
+        <td>Cosine: cos(x)</td>
+    </tr>
+    <tr>
+        <td>tg</td>
+        <td>Tangent: tg(x)</td>
+    </tr>
+    <tr>
+        <td>ctg</td>
+        <td>Cotangent: ctg(x)</td>
+    </tr>
+    <tr>
+        <td>ln</td>
+        <td>Natural logarithm: ln(x)</td>
+    </tr>
+    <tr>
+        <td>log</td>
+        <td>Base n logarithm: log(n, x)</td>
+    </tr>
 </table>
 
-<h2 id="examplesHeader"></h2>
+<h2 id="examplesHeader">Examples: </h2>
 <ul>
     <li>
-        <button id="example1Button" onclick="loadExample('example1')">Вставить</button>
+        <button id="example1Button" onclick="loadExample('example1')">Insert</button>
         f(x) = <span id="example1">-cos(x) + sin(x) - tg(x) + ctg(x)</span>
     </li>
     <li>
-        <button id="example2Button" onclick="loadExample('example2')">Вставить</button>
+        <button id="example2Button" onclick="loadExample('example2')">Insert</button>
         f(x) = <span id="example2">x^2 * ln( x + 1 )</span>
     </li>
     <li>
-        <button id="example3Button" onclick="loadExample('example3')">Вставить</button>
+        <button id="example3Button" onclick="loadExample('example3')">Insert</button>
         f(x) = <span id="example3">(x+1)/e^(a+x)</span>
     </li>
     <li>
-        <button id="example4Button" onclick="loadExample('example4')">Вставить</button>
+        <button id="example4Button" onclick="loadExample('example4')">Insert</button>
         f(x) = <span id="example4">a^(2*x)</span>
     </li>
     <li>
-        <button id="example5Button" onclick="loadExample('example5')">Вставить</button>
+        <button id="example5Button" onclick="loadExample('example5')">Insert</button>
         f(x) = <span id="example5">log(2*x, x^2)</span>
     </li>
     <li>
-        <button id="example6Button" onclick="loadExample('example6')">Вставить</button>
+        <button id="example6Button" onclick="loadExample('example6')">Insert</button>
         f(x) = <span id="example6">rt(a, (x+1))</span>
     </li>
 </ul>
 
 <div>
     f(x) = <input type="text" id="function"/>
-    <button id="calculateButton" onclick="calculateDerivative()"></button>
+    <button id="calculateButton" onclick="calculateDerivative()">Calculate df(x)/dx</button>
 </div>
 
 <div id="errorDiv" style="display: none">
-    <h2 id="errorHeader"></h2>
+    <h2 id="errorHeader">Something went wrong:</h2>
     <p id="errorText"></p>
 </div>
 
 <div id="difDiv" style="display: none">
-    <h2 id="derivativeHeader"></h2>
+    <h2 id="derivativeHeader">Derivative:</h2>
     df(x)/dx = <span id="result"></span>
     <div>
-        <h2 id="functionSyntaxTreeHeader" class="inline"></h2>
+        <h2 id="functionSyntaxTreeHeader" class="inline">Function syntax tree: </h2>
         <button id="originalTreeButton" class="inline" onclick="showOriginalTree()">v</button>
         <div id="originalTreeDiv" style="display: none">
             <canvas id="originalTreeCanvas">
@@ -123,7 +202,7 @@
     </div>
 
     <div>
-        <h2 id="derivativeSyntaxTreeHeader" class="inline"></h2>
+        <h2 id="derivativeSyntaxTreeHeader" class="inline">Derivative syntax tree: </h2>
         <button id="derivativeTreeButton" class="inline" onclick="showDerivativeTree()">v</button>
         <div id="derivativeTreeDiv" style="display: none">
             <canvas id="derivativeTreeCanvas">
@@ -133,8 +212,22 @@
     </div>
 </div>
 
-<h2 id="aboutHeader"></h2>
+<h2 id="aboutHeader">About:</h2>
 <div id="about">
+<p>
+The page demonstrates the implementation of the symbolic computation of the derivative using the
+<a href='https://en.wikipedia.org/wiki/Abstract_syntax_tree'>abstract syntax tree</a>.
+The tree is built by the <a href='https://en.wikipedia.org/wiki/Shunting-yard_algorithm' >Shunting-yard algorithm</a>.
+</p>
+<p>
+After the derivative computation you can also see the syntax trees which were built from the input function and while computing the derivative.
+</p>
+<p>
+All computations are done in browser, no server connection is needed. The full Javascript code can be seen in page sources.
+</p>
+<p>
+If you have a question, you can contact me: <a href='mailto:dvgrafov@gmail.com'>dvgrafov@gmail.com</a>
+</p>
 </div>
 </body>
 </html>
