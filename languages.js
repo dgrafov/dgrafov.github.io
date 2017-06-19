@@ -104,7 +104,7 @@ var russian =
         "Все вычисления производятся в браузере, без участия сервера. Полный код реализаци можно посмотреть в коде страницы." +
         "</p>" +
         "<p>" +
-        "Если у вас есть вопрос, можете написать мне письмо: <a href='mailto:grafovdv@gmail.com'>grafovdv@gmail.com</a>" +
+        "Если у вас есть вопрос, можете написать мне письмо: <a href='mailto:dvgrafov@gmail.com'>dvgrafov@gmail.com</a>" +
         "</p>",
     noFunctionError: "Введите функцию",
     noTreeError: "Сначала вычислите производную",
@@ -221,7 +221,7 @@ var english =
         "All computations are done in browser, no server connection is needed. The full Javascript code can be seen in page sources." +
         "</p>" +
         "<p>" +
-        "If you have a question, you can contact me: <a href='mailto:grafovdv@gmail.com'>grafovdv@gmail.com</a>" +
+        "If you have a question, you can contact me: <a href='mailto:dvgrafov@gmail.com'>dvgrafov@gmail.com</a>" +
         "</p>",
     noFunctionError: "Enter function first",
     noTreeError: "Calculate derivative first",
