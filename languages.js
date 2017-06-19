@@ -105,7 +105,14 @@ var russian =
         "</p>" +
         "<p>" +
         "Если у вас есть вопрос, можете написать мне письмо: <a href='mailto:grafovdv@gmail.com'>grafovdv@gmail.com</a>" +
-        "</p>"
+        "</p>",
+    noFunctionError: "Введите функцию",
+    noTreeError: "Сначала вычислите производную",
+    unknownFunctionError: "Неизвестная функция: ",
+    unknownSymbolError: "Неизвестный символ: ",
+    noClosingBracketError: "Не хватает закрывающей скобки",
+    noOpeningBracketError: "Не хватает открывающей скобки",
+    notEnoughOperandsError: "Не хватает операндов для оператора: "
 }
 
 var english =
@@ -211,11 +218,18 @@ var english =
         "After the derivative computation you can also see the syntax trees which were built from the input function and while computing the derivative." +
         "</p>" +
         "<p>" +
-        "All computations are done in browser, no server connection is needed. The full Javascript code can be seen in page's sources." +
+        "All computations are done in browser, no server connection is needed. The full Javascript code can be seen in page sources." +
         "</p>" +
         "<p>" +
         "If you have a question, you can contact me: <a href='mailto:grafovdv@gmail.com'>grafovdv@gmail.com</a>" +
-        "</p>"
+        "</p>",
+    noFunctionError: "Enter function first",
+    noTreeError: "Calculate derivative first",
+    unknownFunctionError: "Unknown function: ",
+    unknownSymbolError: "Unknown symbol: ",
+    noClosingBracketError: "Lack of closing bracket",
+    noOpeningBracketError: "Lack of opening bracket",
+    notEnoughOperandsError: "Lack of operands for the operator: "
 }
 
 

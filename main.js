@@ -1,7 +1,3 @@
-var noFunctionError = "Введите функцию";
-var noTreeError = "Сначала вычислите производную";
-
-//TODO localize errors
 
 //simplification
 
@@ -56,7 +52,7 @@ function calculateDerivative() {
         }
     }
     else {
-        displayError(noFunctionError);
+        displayError(currentLanguage.noFunctionError);
     }
 }
 
@@ -69,7 +65,7 @@ function showOriginalTree() {
         button.innerHTML = "^";
     }
     else {
-        displayError(noTreeError);
+        displayError(currentLanguage.noTreeError);
     }
 }
 
@@ -90,7 +86,7 @@ function showDerivativeTree() {
         button.innerHTML = "^";
     }
     else {
-        displayError(noTreeError);
+        displayError(currentLanguage.noTreeError);
     }
 }
 

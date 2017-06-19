@@ -1,9 +1,3 @@
-var unknownFunction = "Неизвестная функция: ";
-var unknownSymbol = "Неизвестный символ: ";
-var noClosingBracket = "Не хватает закрывающей скобки";
-var noOpeningBracket = "Не хватает открывающей скобки";
-var notEnoughOperands = "Не хватает операндов для оператора: ";
-
 function buildTree(input) {
     var opStack = [];
     var outStack = [];
@@ -54,7 +48,7 @@ function buildTree(input) {
                 }
             }
             else {
-                error = noOpeningBracket;
+                error = currentLanguage.noOpeningBracketError;
             }
 
 
@@ -72,7 +66,7 @@ function buildTree(input) {
             }
 
             if(opStack.length == 0) {
-                error = noOpeningBracket;
+                error = currentLanguage.noOpeningBracketError;
             }
             i++;
         }
@@ -98,7 +92,7 @@ function buildTree(input) {
                 }
                 else{
                     //error unknown function
-                    error = unknownFunction + str;
+                    error = currentLanguage.unknownFunctionError + str;
                 }
             }
             i = n;
@@ -118,7 +112,7 @@ function buildTree(input) {
         }
         else {
             //error
-            error = unknownSymbol + input[i];
+            error = currentLanguage.unknownSymbolError + input[i];
             console.log(error);
             break;
         }
@@ -126,7 +120,7 @@ function buildTree(input) {
     if(error === "") {
         while(opStack.length > 0 && error === "") {
             if(opStack[opStack.length - 1] === "(" ) {
-                error = noClosingBracket;
+                error = currentLanguage.noClosingBracketError;
             }
             else {
                 var ret = popOperatorFromStack(opStack, outStack);
@@ -385,7 +379,7 @@ function popOperatorFromStack(operatorStack, outputStack) {
     }
     catch (err) {
         console.log(err.message);
-        return notEnoughOperands + operator.token;
+        return currentLanguage.notEnoughOperandsError + operator.token;
     }
     return "";
 }
